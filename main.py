@@ -90,8 +90,6 @@ def main():
         page_title="RapidAPI Insights",
         page_icon="https://developer.symanto.com/favicon.ico",
     )
-    st.image(
-        "https://symanto.atlassian.net/wiki/download/attachments/32773/atl.site.logo?version=1&modificationDate=1640006814606&cacheVersion=1&api=v2")
 
     st.header("RapidAPI Insights")
     file = st.file_uploader("Upload your json file here")
