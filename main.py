@@ -47,19 +47,24 @@ def get_filtered_df(df, dates, apis, names) -> pd.DataFrame:
 
 
 def format_input_file(file) -> pd.DataFrame:
-    df = pd.read_json(file)
-    subscription_df = pd.json_normalize(df.subscription)
-    subscription_df = subscription_df.drop(columns=['__typename'])
-    entity_df = pd.json_normalize(df.entity)
-    entity_df = entity_df.drop(columns=["__typename"])
-    a = df.drop(columns=['subscription', "entity"])
-    b = pd.concat([a, subscription_df, entity_df], axis=1)
-    b.createdAt = pd.to_datetime(b.createdAt)
+    try:
+        df = pd.read_json(file)
+    except ValueError:
+        st.error("Please upload a valid JSON file")
+        return
+    else:
+        subscription_df = pd.json_normalize(df.subscription)
+        subscription_df = subscription_df.drop(columns=['__typename'])
+        entity_df = pd.json_normalize(df.entity)
+        entity_df = entity_df.drop(columns=["__typename"])
+        a = df.drop(columns=['subscription', "entity"])
+        b = pd.concat([a, subscription_df, entity_df], axis=1)
+        b.createdAt = pd.to_datetime(b.createdAt)
 
-    # Check if na
-    b.name = b.name.fillna("undefined")
+        # Check if na
+        b.name = b.name.fillna("undefined")
 
-    return b
+        return b
 
 
 def plot_api_groups(df):
@@ -68,6 +73,7 @@ def plot_api_groups(df):
     grouped_df = grouped_df.drop(columns=["id", "totalAmount", "paid", "paidout", "additionalAmount", "refunded", "refundedAmount", "billingPlanVersion.price"])
     grouped_df["endpoint"] = grouped_df.index
     st.bar_chart(grouped_df, x="endpoint", y="payoutAmount")
+
 
 def plot_payout_amount_by_client(df):
     st.subheader("Payout by customer")
@@ -95,6 +101,8 @@ def main():
     file = st.file_uploader("Upload your json file here")
     if file:
         df = format_input_file(file)
+        if df is None:
+            return
 
         with st.sidebar:
             st.subheader("Filter section")
