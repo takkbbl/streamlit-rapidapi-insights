@@ -26,7 +26,8 @@ def plot_kpis(df) -> None:
     col1, col2, col3 = st.columns(3)
     col1.metric(label="Total Amount", value="USD %.2f" % df.totalAmount.sum())
     col2.metric(label="Payout Amount", value="USD %.2f" % df.payoutAmount.sum())
-    style_metric_cards(border_left_color = '#1a0a91')
+    col3.metric(label="Customers", value=len(df.groupby("name").count().index.values))
+    style_metric_cards(border_left_color='#1a0a91')
 
 
 def get_filtered_df(df, dates, apis, names) -> pd.DataFrame:
