@@ -11,13 +11,17 @@ def plot_payout_amount_by_month(df) -> None:
 
     df_2021 = df[df['createdAt'].dt.year == 2021]
     df_2022 = df[df['createdAt'].dt.year == 2022]
+    df_2023 = df[df['createdAt'].dt.year == 2023]
     payout_by_month_2021 = df_2021.groupby([df['createdAt'].dt.month]).agg(sum_payout = ('payoutAmount' , 'sum'))
     payout_by_month_2022 = df_2022.groupby([df['createdAt'].dt.month]).agg(sum_payout = ('payoutAmount' , 'sum'))
+    payout_by_month_2023 = df_2023.groupby([df['createdAt'].dt.month]).agg(sum_payout = ('payoutAmount' , 'sum'))
     payout_by_month_2021.index = "2021-" + payout_by_month_2021.index.astype(str)
     payout_by_month_2021.index = pd.to_datetime(payout_by_month_2021.index)
     payout_by_month_2022.index = "2022-" + payout_by_month_2022.index.astype(str)
     payout_by_month_2022.index = pd.to_datetime(payout_by_month_2022.index)
-    payout_by_month_all = pd.concat([payout_by_month_2021, payout_by_month_2022], axis=0)
+    payout_by_month_2023.index = "2023-" + payout_by_month_2023.index.astype(str)
+    payout_by_month_2023.index = pd.to_datetime(payout_by_month_2023.index)
+    payout_by_month_all = pd.concat([payout_by_month_2021, payout_by_month_2022, payout_by_month_2023], axis=0)
     st.line_chart(data=payout_by_month_all)
 
 
