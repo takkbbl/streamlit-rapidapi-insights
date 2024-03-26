@@ -132,7 +132,8 @@ def main():
 
         plot_kpis(df)
 
-        plot_api_groups(df)
+        # Throwing error on .sum() function. That's why I disabled this part:
+        # plot_api_groups(df)
         plot_payout_amount_by_client(df)
         plot_payout_amount_by_month(df)
 
